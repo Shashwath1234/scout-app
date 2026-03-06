@@ -3,7 +3,6 @@ const { Pool } = require('pg');
 const cors = require('cors');
 
 const app = express();
-const port = 5000;
 
 // 1. Allow your Frontend (React) to talk to this Backend
 app.use(cors());
@@ -46,6 +45,6 @@ app.get('/api/players', async (req, res) => {
   }
 });
 
-app.listen(port, () => {
+app.listen(port, '0.0.0.0', () => {
   console.log(`Backend is running on http://localhost:${port}`);
 });
