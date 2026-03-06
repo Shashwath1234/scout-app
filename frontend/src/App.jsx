@@ -7,13 +7,17 @@ function App() {
   const countries = ['Japan', 'England', 'Brazil'];
 
   // Fetch players whenever the country changes
-  useEffect(() => {
-    if (country) {
-fetch('https://scout-backend.onrender.com/api/players?country=${country}')        .then(res => res.json())
-        .then(data => setPlayers(data))
-        .catch(err => console.error("Error fetching players:", err));
-    }
-  }, [country]);
+// This automatically picks the Render URL if it's live, or localhost if you're coding
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
+useEffect(() => {
+  if (country) {
+    fetch(`${API_URL}/api/players?country=${country}`)
+      .then(res => res.json())
+      .then(data => setPlayers(data))
+      .catch(err => console.error("Error:", err));
+  }
+}, [country]);
 
   return (
     <div className="min-h-screen bg-gray-100 p-6 font-sans">
