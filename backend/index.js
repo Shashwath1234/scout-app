@@ -11,11 +11,10 @@ app.use(express.json());
 
 // 2. Connect to your PostgreSQL Database
 const pool = new Pool({
-  user: 'shash_linux', // Your WSL username
-  host: 'localhost',
-  database: 'hiring_db',
-  password: 'your_password_here', // The password you set earlier
-  port: 5432,
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false // Required for Render/Cloud connections
+  }
 });
 
 // 3. The "Scout" Endpoint: Get players by country

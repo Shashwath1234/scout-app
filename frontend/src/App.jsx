@@ -9,8 +9,7 @@ function App() {
   // Fetch players whenever the country changes
   useEffect(() => {
     if (country) {
-      fetch(`http://localhost:5000/api/players?country=${country}`)
-        .then(res => res.json())
+fetch('https://scout-backend.onrender.com/api/players?country=${country}')        .then(res => res.json())
         .then(data => setPlayers(data))
         .catch(err => console.error("Error fetching players:", err));
     }
