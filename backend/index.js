@@ -4,12 +4,13 @@ const cors = require('cors');
 
 const app = express();
 
-// 1. Allow your Frontend (React) to talk to this Backend
+// Use the Render-assigned port or default to 5000 for local dev
+const port = process.env.PORT || 5000;
+
 app.use(cors());
 app.use(express.json());
 
-// 2. Connect to your PostgreSQL Database
-// This checks if we are on Render (DATABASE_URL exists) or Local
+// Smart Connection: Checks if we are on Render (Cloud) or Local (WSL)
 const isProduction = process.env.DATABASE_URL;
 
 const pool = new Pool(
@@ -22,23 +23,20 @@ const pool = new Pool(
         user: 'shash_linux',
         host: 'localhost',
         database: 'hiring_db',
-        password: 'your_password_here', // Keep your local password
+        password: 'your_password_here', // Use your local WSL DB password
         port: 5432,
       }
 );
 
-// Also, update the port to be dynamic for Render
-const port = process.env.PORT || 5000;
-
-// 3. The "Scout" Endpoint: Get players by country
 app.get('/api/players', async (req, res) => {
   try {
-    const { country } = req.query; // Get the country from the URL (e.g., ?country=Japan)
+    const { country } = req.query;
+    // Selecting * now includes all the new fields we just added
     const result = await pool.query(
       'SELECT * FROM players WHERE country = $1', 
       [country]
     );
-    res.json(result.rows); // Send the list of players to the frontend
+    res.json(result.rows);
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
@@ -46,5 +44,5 @@ app.get('/api/players', async (req, res) => {
 });
 
 app.listen(port, '0.0.0.0', () => {
-  console.log(`Backend is running on http://localhost:${port}`);
+  console.log(`Server running on port ${port}`);
 });
